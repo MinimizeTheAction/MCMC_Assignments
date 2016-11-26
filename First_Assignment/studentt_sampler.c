@@ -16,7 +16,8 @@ double lklhood(double x, void *params) {
 	 
 	/* caste params to the struct type desired */
 	struct param_type *params_ptr = params;
-	/* access the parameters*/
+	/* access the parameters. The arrow -> is used bc params_ptr is
+	 * a pointer and needs to be dereference them */
 	double nu  = params_ptr->nu;
 	double mu = params_ptr->mu;
 	double sigma = params_ptr->sigma;
