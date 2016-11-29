@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
+#include <gsl/gsl_math.h>
 
 /* A data type to specify which parameters will be stored */
 struct param_type {
@@ -25,7 +26,7 @@ double lklhood(double x, void *params) {
 	double arg = (x-mu)/sigma;
 	
 	return gsl_ran_tdist_pdf(arg,nu)/sigma;
-	}
+}
 
 
 
@@ -38,6 +39,7 @@ int main(int argc, char *argv[]) {
 	/* set iteration variables and the order of the student-t distribution
 	 * from the command line arguments */
 	int i, itr = atoi(argv[1]);
+	
 	/* parameters of student t distributions */
 	double nu = atof(argv[2]); 
 	double mu = atof(argv[3]);
@@ -47,7 +49,7 @@ int main(int argc, char *argv[]) {
 	struct param_type params = {nu,mu,sigma};
 	
 	/* open text file for writing  and make sure it works*/
-	FILE *f = fopen(argv[3], "w"); 
+	FILE *f = fopen(argv[5], "w"); 
 	if (f == NULL) {
     	printf("Error opening file!\n");
     	exit(1);
@@ -57,11 +59,27 @@ int main(int argc, char *argv[]) {
 	r = gsl_rng_alloc(gsl_rng_mt19937); 
 	gsl_rng_set(r,1); 
 	
+	/* Start initial value */
+	double x_cur = 1.0; 
+	double proposal_sigma = 1.0;
+	double alpha;
+	double x_prop;
+	
 	/* Start the MCMC */
 	for (i=0;i<itr;i++) {
-		k = gsl_ran_flat(r,0.0,1.0);
-		k = lklhood(k, &params); 
-		fprintf(f," %.5f\n",k);
+		/* propose a new x */
+		x_prop = gsl_ran_gaussian(r,proposal_sigma) + x_cur;
+		
+		/* Calculate acceptance probability */
+		double accept_prob = lklhood(x_prop, &params)/lklhood(x_cur, &params);
+		alpha = GSL_MIN(1.0,accept_prob);
+		
+		/* Accept or not, decide */
+		u = gsl_ran_flat(r,0.0,1.0);
+		if (u < alpha) {
+			x_cur = x_prop;
+		}/* print to data file */
+		fprintf(f," %.5f\n",x_cur);
 	} 
 	
 	/* Clean up time */
