@@ -19,12 +19,14 @@ rounded(x) = bin_width*(bin_number(x)+0.5)
 
 stats 'dummy.txt' u 1
 
-rand_walk_sig(x) = 1/sqrt(t(x)*1000)
 
-plot [-5:6] t(x) linetype 4 linecolor "blue" linewidth 2 notitle,\
-     'dummy.txt' using (rounded($1)):(1)/(bin_width*STATS_records) \
-     	 smooth frequency with boxes linecolor "black" linewidth 2 notitle,\
-     '+' using 1:(t(x)*(1+3*rand_walk_sig(x))):(t(x)*(1-3*rand_walk_sig(x))) with filledcurves closed
+
+# rand_walk_sig(x) = 1/sqrt(t(x)*1000)
+
+# plot [-5:6] log10(t(x)+1/10**12) linetype 4 linecolor "blue" linewidth 2 notitle,\
+#     'dummy.txt' using (rounded($1)):(log10((1)/(bin_width*STATS_records)+1/10**12)) \
+#     	 smooth frequency with boxes linecolor "black" linewidth 2 notitle
+#     ‘+’ using 1:(t(x)*(1+3*rand_walk_sig(x))):(t(x)*(1-3*rand_walk_sig(x))) with #filledcurves closed
 
      	 
 
