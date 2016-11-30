@@ -3,7 +3,7 @@
 make studentt_sampler
 
 # arguments to pass to ./studentt_sampler
-no_samples=1000
+no_samples=5
 nu=3.0
 mu=1.0
 sigma=1.0
@@ -16,7 +16,10 @@ figure_files=("chain_0p01.pdf" "chain_0p1.pdf" "chain_1.pdf" "chain_10.pdf")
 
 for i in `seq 0 3`;
 do
-	# echo ${data_files[$i]}
-	./studentt_sampler no_samples nu mu sigma echo ${data_files[$i]} echo ${proposal_sigma[$i]}
-	
+	#echo ${data_files[$i]}
+	./studentt_sampler no_samples nu mu sigma "${data_files[$i]}" "${proposal_sigma[$i]}" &
+	# ./post_process.py echo ${data_files[$i]} echo ${figure_files[$i]}
+
 done
+
+wait
