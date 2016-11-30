@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 	/* Initialization */
 	const gsl_rng_type * T;
 	gsl_rng * r;
-	double k;
+	
 	
 	/* set iteration variables and the order of the student-t distribution
 	 * from the command line arguments */
@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
 	struct param_type params = {nu,mu,sigma};
 	
 	/* open text file for writing  and make sure it works*/
+	
 	FILE *f = fopen(argv[5], "w"); 
 	if (f == NULL) {
     	printf("Error opening file!\n");
@@ -61,9 +62,12 @@ int main(int argc, char *argv[]) {
 	
 	/* Start initial value */
 	double x_cur = 1.0; 
-	double proposal_sigma = 1.0;
+	double proposal_sigma = atof(argv[6]);
 	double alpha;
 	double x_prop;
+	int accept; /* keep track of acceptance rate */
+	double u; /* to make decision of accept proposal or not */
+	double accept_prob;
 	
 	/* Start the MCMC */
 	for (i=0;i<itr;i++) {
@@ -71,15 +75,19 @@ int main(int argc, char *argv[]) {
 		x_prop = gsl_ran_gaussian(r,proposal_sigma) + x_cur;
 		
 		/* Calculate acceptance probability */
-		double accept_prob = lklhood(x_prop, &params)/lklhood(x_cur, &params);
+		accept_prob = lklhood(x_prop, &params)/lklhood(x_cur, &params);
 		alpha = GSL_MIN(1.0,accept_prob);
 		
 		/* Accept or not, decide */
 		u = gsl_ran_flat(r,0.0,1.0);
 		if (u < alpha) {
 			x_cur = x_prop;
+			accept = 1;
 		}/* print to data file */
-		fprintf(f," %.5f\n",x_cur);
+		else {
+			accept = 0;
+		}
+		fprintf(f," %.5f %i\n",x_cur,accept);
 	} 
 	
 	/* Clean up time */
