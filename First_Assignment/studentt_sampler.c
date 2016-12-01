@@ -50,7 +50,6 @@ int main(int argc, char *argv[]) {
 	
 	/* open text file for writing  and make sure it works*/
 	
-	printf("%s\n",argv[5]);
 	FILE *f = fopen(argv[5], "w"); 
 	
 	if (f == NULL) {
@@ -73,7 +72,6 @@ int main(int argc, char *argv[]) {
 	
 	/* Start the MCMC */
 	for (i=0;i<itr;i++) {
-		printf("here!!!\n");
 		/* propose a new x */
 		x_prop = gsl_ran_gaussian(r,proposal_sigma) + x_cur;
 		
