@@ -3,7 +3,7 @@
 make studentt_sampler
 
 # arguments to pass to ./studentt_sampler
-no_samples=1000
+no_samples=5000
 nu=3.0
 mu=1.0
 sigma=1.0
