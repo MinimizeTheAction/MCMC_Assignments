@@ -1,3 +1,46 @@
+/* 
+ *----------------------------------------------------------------------------------------
+ * Function:
+ *     This program calculates the unbiased sample autocorrelation for a time series
+ *     x with N elements for each parameter of a chain file.
+ *     
+ *     rho(l) = gamma(l)/gamma(0)
+ * 	   where rho is the autocorrelation, l is the lag and gamma is defined by
+ *     
+ *     gamma(l) = 1/(N-l)SUM(i = 1 to N-l)[(x_(i+l) - x_avg)(x_i-x_avg)]
+ *
+ *     gamma(0) is just the variance. x_avg is the average of the time series
+ *     The autocorrelation length is return and defined where rho(l) drops
+ *     to about 0.01.
+ * ---------------------------------------------------------------------------------------
+ * Notes:
+ *    1) Greatly inspired by: http://www.csee.usf.edu/~kchriste/tools/autoc.c
+ *    2) Refer to 'test_data.dat' to see the file format that one should have.
+ *			i.e. no string/characters at top of relevant columns, format of 
+ *			columns before the first_column are irrelevant.
+ *       
+ * ---------------------------------------------------------------------------------------
+ * Example Input: ./studentt_sampler 1000 3.0 1.0 1.0 data_file_test.txt 1.0
+ *				  ./studentt_sampler [iterations] [nu] [mu] [sigma] [out_file] [proposal_sigma]
+ * ---------------------------------------------------------------------------------------
+ * Example Output:
+ * ---------------------------------------------------------------------------------------
+ * Build: 
+ * ---------------------------------------------------------------------------------------
+ * Author: Travis Robson (TR)
+ * ---------------------------------------------------------------------------------------
+ * History:
+ *     TR (12/9/16)  - Genesis
+ *     
+ * ---------------------------------------------------------------------------------------
+ * Test:
+ *     1) 
+ * ---------------------------------------------------------------------------------------
+ * Development:
+ *     1) 
+ * ---------------------------------------------------------------------------------------
+ */
+
 #include <stdio.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
